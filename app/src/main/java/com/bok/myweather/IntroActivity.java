@@ -6,8 +6,6 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Timer;
-
 public class IntroActivity extends AppCompatActivity {
 
     @Override
