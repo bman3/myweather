@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyWeather</string>
+
+    <string name="now_position">현재 위치</string>
+    <string name="colon">:</string>
+    <string name="position_change">위치변경</string>
+</resources>

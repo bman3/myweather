@@ -1,0 +1,66 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.bok.myweather'
+    compileSdk 35
+
+    buildFeatures {
+        buildConfig = true
+    }
+    defaultConfig {
+        applicationId "com.bok.myweather"
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def apikeyPropsFile = rootProject.file("apikey.properties")
+        def apikeyProps = new Properties()
+        if (apikeyPropsFile.exists()) {
+            apikeyProps.load(new FileInputStream(apikeyPropsFile))
+        }
+
+        buildConfigField "String", "OPEN_WEATHER_API_KEY", "\"${apikeyProps['OPEN_WEATHER_API_KEY']}\""
+        buildConfigField "String", "AIR_VISUAL_API_KEY", "\"${apikeyProps['AIR_VISUAL_API_KEY']}\""
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    buildToolsVersion '35.0.0'
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+
+    // Retrofit 라이브러리
+    implementation libs.retrofit
+    implementation libs.converter.gson // JSON 변환
+
+    // Google Maps API
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+}
