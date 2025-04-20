@@ -1,92 +1,108 @@
 package com.bok.myweather;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.app.ActivityCompat;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int MAP_REQUEST_CODE = 1001;
-    private static final String API_KEY = "YOUR_OPENWEATHERMAP_API_KEY";
 
-    private double latitude = 37.5665; // 기본 위치 (서울)
-    private double longitude = 126.9780;
-
-    private TextView weatherInfo;
-    private Button btnSelectLocation, btnGetWeather;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private FusedLocationProviderClient fusedLocationClient;
+    private TextView weatherTextView;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        weatherInfo = findViewById(R.id.weatherInfo);
-        btnSelectLocation = findViewById(R.id.btnSelectLocation);
-        btnGetWeather = findViewById(R.id.btnGetWeather);
+        weatherTextView = findViewById(R.id.weatherText);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        requestQueue = Volley.newRequestQueue(this);
 
-        // 지도에서 위치 선택
-        btnSelectLocation.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-            startActivityForResult(intent, MAP_REQUEST_CODE);
+        getLocationAndFetchWeather();
+    }
+
+    private void getLocationAndFetchWeather() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+            return;
+        }
+
+        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null) {
+                double lat = location.getLatitude();
+                double lon = location.getLongitude();
+                fetchWeather(lat, lon);
+                fetchAirQuality(lat, lon);
+            }
         });
+    }
 
-        // 날씨 조회
-        btnGetWeather.setOnClickListener(v -> fetchWeatherData());
+    private void fetchWeather(double lat, double lon) {
+        String apiKey = "4867cb9492c3efadbfb0ee355451eac5";
+        String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&units=metric&appid=" + apiKey;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        String city = response.getString("name");
+                        JSONObject main = response.getJSONObject("main");
+                        double temp = main.getDouble("temp");
+                        weatherTextView.append("\n[날씨] " + city + ": " + temp + "°C");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> weatherTextView.append("\n날씨 데이터를 불러오지 못했습니다.")
+        );
+
+        requestQueue.add(request);
+    }
+
+    private void fetchAirQuality(double lat, double lon) {
+        String apiKey = "fec1ee23-7e76-4ac0-b35b-f55ab8293a9d";
+        String url = "https://api.airvisual.com/v2/nearest_city?lat=" + lat + "&lon=" + lon + "&key=" + apiKey;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        JSONObject data = response.getJSONObject("data");
+                        JSONObject current = data.getJSONObject("current");
+                        JSONObject pollution = current.getJSONObject("pollution");
+                        int aqi = pollution.getInt("aqius");
+                        weatherTextView.append("\n[미세먼지] AQI: " + aqi);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> weatherTextView.append("\n미세먼지 데이터를 불러오지 못했습니다.")
+        );
+
+        requestQueue.add(request);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MAP_REQUEST_CODE && resultCode == RESULT_OK) {
-            latitude = data.getDoubleExtra("latitude", latitude);
-            longitude = data.getDoubleExtra("longitude", longitude);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getLocationAndFetchWeather();
+        } else {
+            weatherTextView.setText("위치 권한이 필요합니다.");
         }
-    }
-
-    private void fetchWeatherData() {
-        WeatherService weatherService = RetrofitClient.getRetrofitInstance().create(WeatherService.class);
-        Call<WeatherResponse> call = weatherService.getWeather(latitude, longitude, API_KEY, "metric");
-
-        call.enqueue(new Callback<WeatherResponse>() {
-            @Override
-            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    WeatherResponse weather = response.body();
-                    String info = "온도: " + weather.getMain().getTemp() + "°C\n" +
-                            "습도: " + weather.getMain().getHumidity() + "%\n" +
-                            "풍속: " + weather.getWind().getSpeed() + " m/s";
-                    weatherInfo.setText(info);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<WeatherResponse> call, Throwable t) {
-                Log.e("Weather", "네트워크 오류: " + t.getMessage());
-            }
-        });
     }
 }
