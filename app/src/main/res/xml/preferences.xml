@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreferenceCompat
+        android:key="pref_enable_push"
+        android:title="푸시 알림 수신"
+        android:defaultValue="true" />
+
+    <EditTextPreference
+        android:key="pref_push_time"
+        android:title="푸시 수신 시간 (0~23시)"
+        android:inputType="number"
+        android:defaultValue="6" />
+
+    <ListPreference
+        android:key="pref_widget_refresh"
+        android:title="위젯 새로고침 간격"
+        android:defaultValue="60"
+        android:entries="@array/refresh_intervals"
+        android:entryValues="@array/refresh_values" />
+
+    <SwitchPreferenceCompat
+        android:key="pref_enable_tts"
+        android:title="음성 안내 사용"
+        android:defaultValue="true" />
+
+    <ListPreference
+        android:key="pref_app_language"
+        android:title="앱 언어 설정"
+        android:defaultValue="ko"
+        android:entries="@array/languages"
+        android:entryValues="@array/language_codes" />
+</PreferenceScreen>

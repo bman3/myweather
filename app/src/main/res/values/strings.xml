@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">MyWeather</string>
-
-    <string name="now_position">현재 위치</string>
-    <string name="colon">:</string>
-    <string name="position_change">위치변경</string>
+    <string name="app_name">온날</string>
+    <string name="banner_ad_unit_id">@string/banner_ad_unit_id</string>
+    <string name="interstitial_ad_unit_id">@string/interstitial_ad_unit_id</string>
 </resources>

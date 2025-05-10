@@ -1,0 +1,29 @@
+<resources>
+    <string-array name="refresh_intervals">
+        <item>5분</item>
+        <item>30분</item>
+        <item>1시간</item>
+        <item>2시간</item>
+        <item>6시간</item>
+    </string-array>
+    <string-array name="refresh_values">
+        <item>5</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>360</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>한국어</item>
+        <item>English</item>
+        <item>日本語</item>
+        <item>中文</item>
+    </string-array>
+    <string-array name="language_codes">
+        <item>ko</item>
+        <item>en</item>
+        <item>ja</item>
+        <item>zh</item>
+    </string-array>
+</resources>

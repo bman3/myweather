@@ -1,66 +1,60 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id 'com.android.application'
+}
+
+def keystorePropertiesFile = rootProject.file("local.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
-    namespace 'com.bok.myweather'
-    compileSdk 35
+    namespace 'com.bok.onnal'
+    compileSdk 34
 
-    buildFeatures {
-        buildConfig = true
-    }
     defaultConfig {
-        applicationId "com.bok.myweather"
-        minSdk 24
-        targetSdk 35
+        applicationId "com.bok.onnal"
+        minSdk 23
+        targetSdk 34
         versionCode 1
         versionName "1.0"
+    }
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        def apikeyPropsFile = rootProject.file("apikey.properties")
-        def apikeyProps = new Properties()
-        if (apikeyPropsFile.exists()) {
-            apikeyProps.load(new FileInputStream(apikeyPropsFile))
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['KEYSTORE_FILE'])
+            storePassword keystoreProperties['KEYSTORE_PASSWORD']
+            keyAlias keystoreProperties['KEY_ALIAS']
+            keyPassword keystoreProperties['KEY_PASSWORD']
         }
-
-        buildConfigField "String", "OPEN_WEATHER_API_KEY", "\"${apikeyProps['OPEN_WEATHER_API_KEY']}\""
-        buildConfigField "String", "AIR_VISUAL_API_KEY", "\"${apikeyProps['AIR_VISUAL_API_KEY']}\""
-
     }
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+
+    buildFeatures {
+        buildConfig true
     }
-    buildToolsVersion '35.0.0'
 }
 
 dependencies {
-
-    implementation libs.appcompat
-    implementation libs.material
-    implementation libs.activity
-    implementation libs.constraintlayout
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
-
-    // Retrofit 라이브러리
-    implementation libs.retrofit
-    implementation libs.converter.gson // JSON 변환
-
-    // Google Maps API
-    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
-    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'androidx.work:work-runtime:2.9.0'
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+    implementation libs.preference
 }
