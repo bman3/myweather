@@ -1,33 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:background="#E3F2FD"
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/text_pm10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PM10: -"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/text_pm25"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PM2.5: -"
-        android:textSize="14sp"
-        android:layout_marginBottom="8dp" />
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/line_chart"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_today"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        <!-- PM 텍스트 -->
+        <TextView
+            android:id="@+id/text_pm10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PM10: --"
+            android:textSize="16sp"
+            android:textColor="#333"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/text_pm25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PM2.5: --"
+            android:textSize="16sp"
+            android:textColor="#333"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 라인 차트 -->
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 시간별 예보 리스트 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_today"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+</ScrollView>
