@@ -13,6 +13,10 @@ android {
     compileSdk 34
 
     defaultConfig {
+        resValue "string", "admob_app_id", "\"${keystoreProperties['ADMOB_APP_ID']}\""
+        resValue "string", "google_maps_key", "\"${keystoreProperties['GOOGLE_MAPS_KEY']}\""
+        buildConfigField "String", "WEATHER_API_KEY", "\"${keystoreProperties['WEATHER_API_KEY']}\""
+        buildConfigField "String", "ADMOB_APP_ID", "\"${keystoreProperties['ADMOB_APP_ID']}\""
         applicationId "com.bok.onnal"
         minSdk 23
         targetSdk 34
@@ -43,6 +47,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.guava:guava:31.1-android'
+    implementation 'androidx.work:work-runtime:2.9.0'  // 최신 안정 버전
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'

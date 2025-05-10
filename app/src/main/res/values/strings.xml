@@ -2,4 +2,6 @@
     <string name="app_name">온날</string>
     <string name="banner_ad_unit_id">@string/banner_ad_unit_id</string>
     <string name="interstitial_ad_unit_id">@string/interstitial_ad_unit_id</string>
+    <string name="admob_app_id">${ADMOB_APP_ID}</string>
+    <string name="google_maps_key">${GOOGLE_MAPS_KEY}</string>
 </resources>
