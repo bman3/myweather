@@ -16,7 +16,7 @@ import com.bok.onnal.util.WeatherIconMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder> {
+public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> {
     private List<ForecastResponse.ForecastItem> items = new ArrayList<>();
 
     public void setItems(List<ForecastResponse.ForecastItem> newItems) {
@@ -27,14 +27,14 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_forecast_daily, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ForecastResponse.ForecastItem item = items.get(position);
-        holder.textDate.setText(item.getDate().substring(0, 10));
+        holder.textTime.setText(item.getDate().substring(11, 16));
         holder.textTemp.setText(String.format("%.1f°C", item.getMain().getTemp()));
         if (!item.getWeather().isEmpty()) {
             holder.imageWeather.setImageResource(WeatherIconMapper.getIconRes(item.getWeather().get(0).getIcon()));
@@ -47,12 +47,12 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textDate, textTemp;
+        TextView textTime, textTemp;
         ImageView imageWeather;
 
         ViewHolder(View view) {
             super(view);
-            textDate = view.findViewById(R.id.text_date);
+            textTime = view.findViewById(R.id.text_time);
             textTemp = view.findViewById(R.id.text_temp);
             imageWeather = view.findViewById(R.id.image_weather);
         }

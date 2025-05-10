@@ -1,27 +1,21 @@
 package com.bok.onnal.api;
 
-import com.bok.onnal.model.WeatherResponse;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface WeatherApiService {
-    @GET("data/2.5/weather")
-    Call<WeatherResponse> getCurrentWeather(
-        @Query("lat") double lat,
-        @Query("lon") double lon,
-        @Query("appid") String apiKey,
+    @GET("weather")
+    Call<WeatherResponse> getWeather(
+        @Query("q") String city,
         @Query("units") String units,
-        @Query("lang") String lang
+        @Query("appid") String apiKey
     );
 
-    @GET("data/2.5/forecast")
-    Call<WeatherResponse> getForecast(
-        @Query("lat") double lat,
-        @Query("lon") double lon,
-        @Query("appid") String apiKey,
+    @GET("forecast")
+    Call<ForecastResponse> getForecast(
+        @Query("q") String city,
         @Query("units") String units,
-        @Query("lang") String lang
+        @Query("appid") String apiKey
     );
 }

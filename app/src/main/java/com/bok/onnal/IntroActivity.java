@@ -21,11 +21,15 @@ public class IntroActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == 100 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);  // ✅ 추가 필요
+
+        if (requestCode == 100 && grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {
             finish();
         }
     }
+
 }
